@@ -7,41 +7,58 @@ const Map = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [marker, setMarker] = useState(null);
   const [markers, setMarkers] = useState(null);
-  let lat = -40.458027;
-  let lng = -65.9029903;
-  let position = [lat, lng];
+  const [distList, setDistList] = useState([]);
+  const [distParcial, setDistParcial] = useState(0);
+  const [distTotal, setDistTotal] = useState(0);
+  const [distActual, setDistActual] = useState(0);
   const [list, setList] = useState(null);
   const [num, setNum] = useState(1);
   const [first, setFirst] = useState(0);
   const [polyLine, setPolyLine] = useState([[[-34.6154304, -58.5981102]]]);
+  // const [auxParcial, setAuxParcial] = useState(0)
+  let lat = -40.458027;
+  let lng = -65.9029903;
+  let position = [lat, lng];
 
   const handleLine = () => {
-    // setMarker([-31.3994532, -64.1942124]);
-    let aux = [list.filter((item, key) => key <= num && [item.lat, item.lng])];
-    // let auxMarker = [markers.filter((item, key) => key <= num && item)];
-    let auxMarker = markers;
-    auxMarker = auxMarker.slice(0, num + 1);
-    // console.log(aux);
-    setPolyLine(aux);
-    setNum(num + 1);
-    setMarker(auxMarker);
-    // console.log(aux);
-    // console.log(auxMarker);
-    // console.log(num);
+    if (num < 24) {
+      // setMarker([-31.3994532, -64.1942124]);
+      let aux = [
+        list.filter((item, key) => key <= num && [item.lat, item.lng]),
+      ];
+      // let auxMarker = [markers.filter((item, key) => key <= num && item)];
+      let auxMarker = markers;
+
+      let auxParcial = 0;
+      for (let i = 0; i < num; i++) {
+        auxParcial += distList[i];
+      }
+
+      auxMarker = auxMarker.slice(0, num + 1);
+      setPolyLine(aux);
+      setNum(num + 1);
+      setMarker(auxMarker);
+      setDistActual(distList[num - 1]);
+      setDistParcial(auxParcial);
+    } else {
+      setIsDisabled(true);
+    }
   };
 
   const calcDistance = (first, Distancias) => {
     setIsDisabled(false);
+    setDistParcial(0);
+    setDistActual(0);
     setList(null);
     setNum(1);
     setPolyLine([]);
+    let distancesTotal = [];
     let provinces = Distancias;
     let firstProv = provinces[first];
     let x = [firstProv.lat, firstProv.lng];
     setMarker([x]);
     let listParcial = [firstProv];
     let totalDist = 0;
-    let parcial = 0;
     let next = 0;
     let min = 999999;
     firstProv.visited = true;
@@ -57,10 +74,12 @@ const Map = () => {
           }
         }
       }
-
       listParcial.push(provinces[next]);
       totalDist += firstProv.distances[next];
       provinces[next].visited = true;
+      distancesTotal.push(firstProv.distances[next]);
+      // setDistActual(distancesTotal);
+      console.log(distancesTotal);
       firstProv = provinces[next];
       // distParcial
     }
@@ -70,8 +89,9 @@ const Map = () => {
       Distancias[i].visited = false;
       aux.push([listParcial[i].lat, listParcial[i].lng]);
     }
-
+    setDistTotal(totalDist);
     setMarkers(aux);
+    setDistList(distancesTotal);
   };
   return (
     <>
@@ -120,6 +140,11 @@ const Map = () => {
               >
                 New line
               </button>
+            </div>
+            <div className="row">
+              <p>Distancia total: {distTotal} km</p>
+              <p>Distancia parcial: {distParcial} km</p>
+              <p>Distancia actual: {distActual} km</p>
             </div>
           </div>
         </div>
