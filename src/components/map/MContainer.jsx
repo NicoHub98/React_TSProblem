@@ -19,11 +19,8 @@ const MContainer = ({ position, data, marker, polyLine }) => {
   //   console.log(polyLine);
   //   num++;
   // };
-
   return (
     <div>
-      <button onClick={() => setColor({ color: "black" })}>Color</button>
-
       <MapContainer
         center={position}
         zoom={4}
@@ -37,11 +34,12 @@ const MContainer = ({ position, data, marker, polyLine }) => {
 
         <Polyline pathOptions={color} positions={polyLine} />
 
-        <Marker position={marker}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+        {marker &&
+          marker.map((pos, i) => (
+            <Marker key={i} position={pos}>
+              <Popup>{data[i].name}</Popup>
+            </Marker>
+          ))}
       </MapContainer>
     </div>
   );
