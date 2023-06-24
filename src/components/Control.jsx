@@ -25,9 +25,13 @@ const Control = ({
   return (
     <>
       <div className="row m-1">
-        <div className="form-floating">
+        <div>
+          <label className="mx-2 labelSelect" htmlFor="selectProv">
+            {" "}
+            Seleccionar provincia de inicio
+          </label>
           <select
-            className="form-select"
+            className="form-select select"
             onChange={(e) => setFirst(e.target.value)}
             id="selectProv"
           >
@@ -37,10 +41,6 @@ const Control = ({
               </option>
             ))}
           </select>
-          <label className="mx-2" htmlFor="selectProv">
-            {" "}
-            Seleccionar provincia de inicio
-          </label>
         </div>
       </div>
       <div className="row m-2">
@@ -53,7 +53,7 @@ const Control = ({
       </div>
       <div className="row m-2">
         <button
-          className="btn btn-secondary"
+          className="btn btn-success"
           onClick={handleLine}
           disabled={isDisabled}
         >
