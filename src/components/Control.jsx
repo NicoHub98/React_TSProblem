@@ -15,6 +15,8 @@ const Control = ({
   distActual,
   data,
   num,
+  loader,
+  setLoader,
 }) => {
   const [newList, setNewList] = useState();
   useEffect(() => {
@@ -46,9 +48,25 @@ const Control = ({
       <div className="row m-2">
         <button
           className="btn btn-primary"
-          onClick={() => calcDistance(first, Distancias)}
+          onClick={() => {
+            setLoader(true);
+            setTimeout(() => {
+              calcDistance(first, Distancias);
+            }, 500);
+          }}
         >
-          Calcular Distancia
+          {loader ? (
+            <>
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>{" "}
+              Cargando...
+            </>
+          ) : (
+            "Calcular Distancia"
+          )}
         </button>
       </div>
       <div className="row m-2">

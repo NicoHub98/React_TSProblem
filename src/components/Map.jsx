@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import MContainer from "./MContainer";
 import Distancias from "../scripts/distancias.json";
 import Control from "./Control";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { GlobalContext } from "../context/GlobalContext";
+
 const Map = () => {
+  const { toggle } = useContext(GlobalContext);
   const [isDisabled, setIsDisabled] = useState(true);
   const [marker, setMarker] = useState(null);
   const [markers, setMarkers] = useState(null);
@@ -15,9 +20,15 @@ const Map = () => {
   const [num, setNum] = useState(1);
   const [first, setFirst] = useState(0);
   const [polyLine, setPolyLine] = useState([[[-34.6154304, -58.5981102]]]);
+  const [loader, setLoader] = useState(false);
   let lat = -40.458027;
   let lng = -65.9029903;
   let position = [lat, lng];
+
+  const toastCalcDistance = () =>
+    toast.success("Distancia calculada correctamente!");
+
+  const toastFinished = () => toast.success("Recorrido terminado!");
 
   const handleLine = () => {
     if (num < 24) {
@@ -37,13 +48,17 @@ const Map = () => {
       setMarker(auxMarker);
       setDistActual(distList[num - 1]);
       setDistParcial(auxParcial);
-      if (num === 23) setIsDisabled(true);
+      if (num === 23) {
+        setIsDisabled(true);
+        toastFinished();
+      }
     } else {
       setIsDisabled(true);
     }
   };
 
   const calcDistance = (first, Distancias) => {
+    toastCalcDistance();
     setIsDisabled(false);
     setDistParcial(0);
     setDistActual(0);
@@ -87,10 +102,12 @@ const Map = () => {
     setDistTotal(totalDist);
     setMarkers(aux);
     setDistList(distancesTotal);
+    setLoader(false);
   };
   return (
     <>
       <div className="container pt-3">
+        <ToastContainer autoClose={1500} theme={toggle ? "dark" : "light"} />
         <div className="row mb-2">
           <div className="row">
             <h1>Problema del Viajero</h1>
@@ -123,6 +140,8 @@ const Map = () => {
               data={list}
               distActual={distActual}
               num={num}
+              loader={loader}
+              setLoader={setLoader}
             />
           </div>
         </div>

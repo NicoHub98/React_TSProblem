@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 
 const Navbar = () => {
-  const [toggle, setToggle] = useState(false);
+  const { toggle, setToggle } = useContext(GlobalContext);
 
   const handleToggle = () => {
     if (!toggle) {
@@ -24,7 +25,6 @@ const Navbar = () => {
               <i className="bi bi-brightness-high-fill"></i>
             )}
           </button>
-          {/* <button className="btn btn-outline-secondary">About</button> */}
         </div>
       </div>
     </nav>

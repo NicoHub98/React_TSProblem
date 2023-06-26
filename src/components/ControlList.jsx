@@ -33,21 +33,27 @@ const ControlList = ({ newList, distParcial }) => {
           scrollMarginBlockEnd: 1 + "px",
         }}
       >
-        <table className="table">
+        <table className="table tableClass">
           <thead>
             <tr>
-              <th style={{ position: "sticky", top: 0 }}> </th>
-              <th style={{ position: "sticky", top: 0 }}>Ciudad</th>
-              <th style={{ position: "sticky", top: 0 }}>Dist. Parcial</th>
+              <th className="tableClass" style={{ position: "sticky", top: 0 }}>
+                {" "}
+              </th>
+              <th className="tableClass" style={{ position: "sticky", top: 0 }}>
+                Ciudad
+              </th>
+              <th className="tableClass" style={{ position: "sticky", top: 0 }}>
+                Dist. Parcial
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="tableClass">
             {newList &&
               newList.map(({ name }, index) => (
                 <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{name}</td>
-                  <td>{sumParcial[index]}</td>
+                  <td className="tableClass">{index + 1}</td>
+                  <td className="tableClass">{name}</td>
+                  <td className="tableClass">{sumParcial[index]}</td>
                 </tr>
               ))}
           </tbody>
